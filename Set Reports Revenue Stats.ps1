@@ -8,7 +8,7 @@ param (
 function Get-ValidDate {
     while ($true) {
         # Prompt the user to enter a date
-        $inputDate = Read-Host "Please enter a date in YYYY-MM-DD format"
+        $inputDate = Read-Host "Please enter go live date in YYYY-MM-DD"
 
         # Replace different delimiters with hyphens
         $inputDate = $inputDate -replace '[./]', '-'
@@ -63,6 +63,9 @@ function Get-ValidDate {
 
 write-host "$inncodes"
 
+$validDate = Get-ValidDate
+$validDate = $validDate.Trim()
+
 $inncodeArray = @()
 $inncodeArray = $inncodes -split "," | ForEach-Object { $_.Trim() }
 
@@ -109,9 +112,6 @@ $session.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.
 $chargeTypesReseponse = Invoke-WebRequest -UseBasicParsing -Uri "$($currentProperty.region.url)v4/hotelbrand/properties/$($currentProperty.id)/charge-types" -WebSession $session -Headers $headers
 $chargeTypes = $chargeTypesReseponse.Content | ConvertFrom-Json
 
-write-host "Please enter go live date in YYYY-MM-DD"
-$validDate = Get-ValidDate
-$validDate = $validDate.Trim()
 $createRevStatsBody = "{`"charge_type_ids`":[`"$($($chargeTypes | Where-Object { $_.code -eq "ENSRR" }).id)`",`"$($($chargeTypes | Where-Object { $_.code -eq "RR" }).id)`",`"$($($chargeTypes | Where-Object { $_.code -eq "RRA" }).id)`",`"$($($chargeTypes | Where-Object { $_.code -eq "NSRR" }).id)`",`"$($($chargeTypes | Where-Object { $_.code -eq "PEC" }).id)`",`"$($($chargeTypes | Where-Object { $_.code -eq "HHRR" }).id)`",`"$($($chargeTypes | Where-Object { $_.code -eq "MRR" }).id)`",`"$($($chargeTypes | Where-Object { $_.code -eq "RTC" }).id)`",`"$($($chargeTypes | Where-Object { $_.code -eq "ADRR" }).id)`"],`"other_room_revenue_charge_type_ids`":[`"$($($chargeTypes | Where-Object { $_.code -eq "NSCF" }).id)`"],`"payment_type_ids`":[],`"calculation_type`":`"REVENUE`",`"exclude_adjustments`":false,`"id`":null,`"created_at`":null,`"updated_at`":null,`"deleted_at`":null}"
 
 Invoke-WebRequest -UseBasicParsing -Uri "$($currentProperty.region.url)v4/hotelbrand/properties/$($currentProperty.id)/calculation-config?calculation_type=REVENUE&start_date=$($validDate)%22" -Method "PUT" -WebSession $session -Headers $headers -ContentType "application/json" -Body $createRevStatsBody
