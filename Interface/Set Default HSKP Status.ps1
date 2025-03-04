@@ -12,9 +12,6 @@ write-host "$inncodes"
 $inncodeArray = @()
 $inncodeArray = $inncodes -split "," | ForEach-Object { $_.Trim() }
 
-$validDate = Get-ValidDate
-$validDate = $validDate.Trim()
-
 foreach ($inncode in $inncodeArray){
 
 #ESTABLISH CONNECTION DETAILS
