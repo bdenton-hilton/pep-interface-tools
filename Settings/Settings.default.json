@@ -1,0 +1,116 @@
+{
+    "Credentials": {
+        "Interface Tool Username": {
+            "flavortext": "Settings are tied to this username and can be any value",
+            "datatype": "string",
+            "defaultvalue": "default",
+            "displaytype": "textbox",
+            "variablename": "settingsInterfaceusername"
+        },
+        "Interface Tool Password": {
+            "flavortext": "This password is used for encryption and should be kept safe",
+            "datatype": "string",
+            "defaultvalue": "password",
+            "displaytype": "passwordtextbox",
+            "variablename": "settingInterfacepassword"
+        },
+        "SSO Username": {
+            "flavortext": "Also known as OnQ Login",
+            "datatype": "string",
+            "defaultvalue": "username",
+            "displaytype": "textbox",
+            "variablename": "settingsSSOusername"
+        },
+        "SSO Password": {
+            "flavortext": "Use of this feature is insecure and not reccommended.",
+            "datatype": "secure string",
+            "defaultvalue": "password",
+            "displaytype": "passwordtextbox",
+            "variablename": "settingsSSOpassword"
+        },
+        "NA-ADM Username": {
+            "flavortext": "Username to connect to Windows devices",
+            "datatype": "string",
+            "defaultvalue": "NA/ADM-username",
+            "displaytype": "textbox",
+            "variablename": "settingsNAADMusername"
+        },
+        "NA-ADM Password": {
+            "flavortext": "Use of this feature is insecure and not reccommended",
+            "datatype": "secure string",
+            "defaultvalue": "password",
+            "displaytype": "passwordtextbox",
+            "variablename": "settingsNAADMpassword"
+        }
+    },
+    "Extensions": {
+        "Laps Password Remote Server": {
+            "flavortext": "Must have PS-Remoting enabled. Use of this feature is insecure and not reccommended",
+            "datatype": "string",
+            "defaultvalue": "device address",
+            "displaytype": "textbox",
+            "variablename": "settingsLAPSserver"
+        },
+        "Check for ANYCONNECT status": {
+            "flavortext": "Checks For Cisco Any Connect service and whether it is connected",
+            "datatype": "boolean",
+            "defaultvalue": "false",
+            "displaytype": "checkbox",
+            "variablename": "settingsCheckAnyConnect"
+        },
+        "Plink Install Location": {
+            "flavortext": "This feature is Currently Unused",
+            "datatype": "string",
+            "defaultvalue": "C:/Program Files/PuTTY",
+            "displaytype": "textbox",
+            "variablename": "settingsPlinkDirectory"
+        }
+    },
+    "Directories": {
+        "Default Install Path": {
+            "flavortext": "Changing this will probably break everything",
+            "datatype": "string",
+            "defaultvalue": "C:/Users/CurrentUser/AppData/Local/",
+            "displaytype": "textbox",
+            "variablename": "configurationInstallPath"
+        },
+        "Default Program Folder Name": {
+            "flavortext": "Changing this will probably break everything",
+            "datatype": "string",
+            "defaultvalue": "Hilton Migration Toolkit",
+            "displaytype": "textbox",
+            "variablename": "configurationInstallFolderName"
+        },
+        "Default Property File Folder Name": {
+            "flavortext": "This is the subdirectoy where OnQ and HK extracts are placed. Property specific reports and extracts will go into a folder named INNCODE",
+            "datatype": "string",
+            "defaultvalue": "Property Files",
+            "displaytype": "textbox",
+            "variablename": "configurationInstallPropertiesFolder"
+        },
+        "Default SSOs File Folder Name": {
+            "flavortext": "This is the subdirectory where SSO sign ons are stored.",
+            "datatype": "string",
+            "defaultvalue": "SSO",
+            "displaytype": "textbox",
+            "variablename": "configurationInstallSSOFolder"
+        },
+        "Default Setting File Folder Name": {
+            "flavortext": "This is the subdirectoy where user settings live.",
+            "datatype": "string",
+            "defaultvalue": "Settings",
+            "displaytype": "textbox",
+            "variablename": "configurationInstallSettingsFolder"
+        },
+        "Default Repository File Folder Name": {
+            "flavortext": "This program is supported by a github repository. Upon startup, this program will attempt to sync with github. This folder should be the base folder",
+            "datatype": "string",
+            "defaultvalue": "Hilton Migration Toolkit",
+            "displaytype": "textbox",
+            "variablename": "configurationInstallRepoFolder"
+        }
+    },
+    "NonVisible": {
+        "SettingsVersion": "1.0"
+    }
+}
