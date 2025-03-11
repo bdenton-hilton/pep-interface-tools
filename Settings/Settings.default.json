@@ -73,9 +73,9 @@
             "variablename": "settingsSSOtimeout"
         },
         "SSO Delete Age": {
-            "flavortext": "PEP Fairy will automatically delete SSO files this many days or older. 0 Means PEP Fairy will not automatically delete SSO Files",
+            "flavortext": " TEST PEP Fairy will automatically delete SSO files this many days or older. 0 Means PEP Fairy will not automatically delete SSO Files",
             "datatype": "int",
-            "defaultvalue": 5,
+            "defaultvalue": 6,
             "displaytype": "integertextbox",
             "variablename": "settingsSSOdelete"
         }
