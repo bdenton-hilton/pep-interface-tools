@@ -3,7 +3,7 @@
         "Interface Tool Username": {
             "flavortext": "Settings are tied to this username and can be any value",
             "datatype": "string",
-            "defaultvalue": "default2",
+            "defaultvalue": "default",
             "displaytype": "textbox",
             "variablename": "settingsInterfaceusername"
         },
@@ -68,12 +68,12 @@
         "SSO Time Out": {
             "flavortext": "How many minutes old can your SSO file be to run a report? 0 means PEP Fairy not prompt regardless of age.",
             "datatype": "int",
-            "defaultvalue": 12,
+            "defaultvalue": 5,
             "displaytype": "integertextbox",
             "variablename": "settingsSSOtimeout"
         },
         "SSO Delete Age": {
-            "flavortext": "PEP Fairy will automatically delete SSO files this many days or older. 0 Means PEP Fairy will not automatically delete SSO Files",
+            "flavortext": "PEPy Fairy will automatically delete SSO files this many days or older. 0 Means PEP Fairy will not automatically delete SSO Files",
             "datatype": "int",
             "defaultvalue": 12,
             "displaytype": "integertextbox",
