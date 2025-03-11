@@ -4,21 +4,23 @@ param (
     [string]$savedirectory
 )
 
+function encyptedPlaintextPasswordToCredentials {
+    param (
+        $username,
+        $password
+    ) 
+    return New-Object PSCredential ($username, (ConvertTo-SecureString $password -ErrorAction SilentlyContinue))
+}
+
 #IMPORT SSO LOGON
 $sso_login = ConvertFrom-Json -InputObject (Get-Content -Path $ssofile -Raw)
 
-function Is-ExecutionPolicyBypass {
-    $executionPolicy = Get-ExecutionPolicy -Scope Process
-    return $executionPolicy -eq 'Bypass'
-}
-
-Is-ExecutionPolicyBypass
+if ($env:globalSettings.Credentials.'NA-ADM Password'.defaultvalue -ne "password")
+{ $credential = encyptedPlaintextPasswordToCredentials -username $script:globalSettings.Credentials.'NA-ADM Username'.defaultvalue -password $script:globalSettings.Credentials.'NA-ADM Password'.defaultvalue }
+else { $credential = Get-Credential }
 
 write-host "$inncodes"
 
-$credential = Get-Credential
-
-$inncodeArray = @()
 $inncodeArray = $inncodes -split "," | ForEach-Object { $_.Trim() }
 
 #ESTABLISH CONNECTION DETAILS
@@ -48,7 +50,10 @@ $headers = @{
   "sec-ch-ua-platform" = "`"Windows`""
 }
 
+$reportResult = "Selected Inn Codes:`n"
+$reportResult += $inncodes
 foreach ($inncode in $inncodeArray){
+$reportResult += "`n" + "-------- $inncode --------" + "`n"
 
 $currentProperty = $sso_login.properties | Where-Object { $_.code -eq $inncode }
 
@@ -72,27 +77,38 @@ ON
 
 $targetScriptBlock = { invoke-sqlcmd -database "hpms3" -query $using:selectMaidCodes }
 
+
 Write-Host "`nConnecting to $computer"
 
 $commandOutput = $null
-try {$commandOutput = Invoke-Command -ComputerName $computer -Credential $credential -ScriptBlock $targetScriptBlock}catch{Write-Host "Unable to query $computer. Please check your credentials, VPN connection, trusted hosts and server status. `nDefault HSKP Codes will be set instead."}
+$commandOutput = Invoke-Command -ComputerName $computer -Credential $credential -ScriptBlock $targetScriptBlock
 $filteredMaidCodes = $($commandOutput | Where-Object { $_.input_code -notmatch '[a-zA-Z]' } | Where-Object { $_.code_desc -notlike '*Attendant*' } | Select-Object input_code, code_desc)
 
 if($filteredMaidCodes){
 $maidCodeStrings = @()
 $input_code = $null
 
+Write-Host "Housekeeping Codes Found:"
+Write-Host "`n"
+$filteredMaidCodes | Format-Table
+
 foreach ($entry in $filteredMaidCodes) {
     $input_code = $entry.input_code
-    $statuses = $statuses - replace '(^\S+\s+\S+)\s.*', '$1' #regex to remove anything after the second word in the status string.
+    $statuses = $statuses -replace '(^\S+\s+\S+)\s.*', '$1' #regex to remove anything after the second word in the status string.
     $statuses = $entry.code_desc.ToUpper() -split ' '
     $occupied_status = $statuses[0]
     $clean_status = $statuses[1]
     $maidCodeStrings += "{`"status_code`":`"$input_code`",`"occupied_status`":`"$occupied_status`",`"clean_status`":`"$clean_status`"}"
 }
 
+$reportResult += "Found the following HSKP Codes from $computer`:`n"
+
+$reportResult += $filteredMaidCodes | Format-Table | Out-String
+
 $maidCodes = $maidCodeStrings -join ","
-} else {$maidCodes = "{`"status_code`":`"1`",`"occupied_status`":`"OCCUPIED`",`"clean_status`":`"CLEAN`"},{`"status_code`":`"2`",`"occupied_status`":`"OCCUPIED`",`"clean_status`":`"DIRTY`"},{`"status_code`":`"3`",`"occupied_status`":`"VACANT`",`"clean_status`":`"CLEAN`"},{`"status_code`":`"4`",`"occupied_status`":`"VACANT`",`"clean_status`":`"DIRTY`"},{`"status_code`":`"5`",`"occupied_status`":`"OCCUPIED`",`"clean_status`":`"READY`"},{`"status_code`":`"7`",`"occupied_status`":`"VACANT`",`"clean_status`":`"READY`"}" }
+} else {$maidCodes = "{`"status_code`":`"1`",`"occupied_status`":`"OCCUPIED`",`"clean_status`":`"CLEAN`"},{`"status_code`":`"2`",`"occupied_status`":`"OCCUPIED`",`"clean_status`":`"DIRTY`"},{`"status_code`":`"3`",`"occupied_status`":`"VACANT`",`"clean_status`":`"CLEAN`"},{`"status_code`":`"4`",`"occupied_status`":`"VACANT`",`"clean_status`":`"DIRTY`"},{`"status_code`":`"5`",`"occupied_status`":`"OCCUPIED`",`"clean_status`":`"READY`"},{`"status_code`":`"7`",`"occupied_status`":`"VACANT`",`"clean_status`":`"READY`"}" 
+$reportResult += "Unable to connect to or find HSKP from $computer.`nDefault HSKP Codes were set.`n"
+}
 
 $propertyID = $currentProperty.id
 
@@ -102,11 +118,20 @@ $pbxConfigResponse = Invoke-WebRequest -UseBasicParsing -Uri "$($currentProperty
 $pbxConfig = $pbxConfigResponse.Content | ConvertFrom-Json
 
 $createHSKPBody = "{`"stream_id`":`"$($pbxConfig.stream_id)`",`"property_id`":`"$propertyID`",`"enabled`":$($pbxConfig.enabled),`"room_alias_type`":`"$($pbxConfig.room_alias_type)`",`"aws_thing_name`":`"pep-prod-$($inncode)-1`",`"room_alias_mappings`":[],`"housekeeping_status_mappings`":[$maidCodes]}"
-Invoke-WebRequest -UseBasicParsing -Uri "$($currentProperty.region.url)hk-property-interfaces/hotelbrand/properties/$($currentProperty.id)/system-config/pbx" -Method "PUT" -WebSession $session -Headers $headers -ContentType "application/json;charset=UTF-8" -Body $createHSKPBody
+$response = Invoke-WebRequest -UseBasicParsing -Uri "$($currentProperty.region.url)hk-property-interfaces/hotelbrand/properties/$($currentProperty.id)/system-config/pbx" -Method "PUT" -WebSession $session -Headers $headers -ContentType "application/json;charset=UTF-8" -Body $createHSKPBody
+
+$reportResult += "Upload to HK result:" + $response.StatusDescription
+
 }
 
-# Add your logic to handle the SSO file and other operations here
-Write-Output "Script execution completed."
+$dateTime = Get-Date -Format "yyyy-MM-dd hh:mm:ss TT"
+$reportResult += "`n" + "--------------" + "`n" + "Script execution completed at $dateTime."
+$dateTimeFileSafe = Get-Date -Format "yyyy-MM-dd_hh-mm-ss"
+$savePath = $savedirectory + "\HSKP Status from OnQ - $dateTimeFileSafe.txt"
+$reportResult | Out-File -FilePath $savePath
+
+
+Write-Output "Script execution completed. Summary saved to $savedirectory"
 
 Read-Host "Press Enter to close the window"
 exit
