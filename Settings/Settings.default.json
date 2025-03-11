@@ -61,21 +61,21 @@
         "Plink Install Location": {
             "flavortext": "This feature is Currently Unused",
             "datatype": "string",
-            "defaultvalue": "C:/Program Files/P",
+            "defaultvalue": "C:/Program Files/PuTTy",
             "displaytype": "textbox",
             "variablename": "settingsPlinkDirectory"
         },
         "SSO Time Out": {
             "flavortext": "How many minutes old can your SSO file be to run a report? 0 means PEP Fairy not prompt regardless of age.",
             "datatype": "int",
-            "defaultvalue": 5,
+            "defaultvalue": 15,
             "displaytype": "integertextbox",
             "variablename": "settingsSSOtimeout"
         },
         "SSO Delete Age": {
-            "flavortext": "PEPy Fairy will automatically delete SSO files this many days or older. 0 Means PEP Fairy will not automatically delete SSO Files",
+            "flavortext": "PEP Fairy will automatically delete SSO files this many days or older. 0 Means PEP Fairy will not automatically delete SSO Files",
             "datatype": "int",
-            "defaultvalue": 12,
+            "defaultvalue": 7,
             "displaytype": "integertextbox",
             "variablename": "settingsSSOdelete"
         }
@@ -123,8 +123,4 @@
             "displaytype": "textbox",
             "variablename": "configurationInstallRepoFolder"
         }
-    },
-    "NonVisible": {
-        "SettingsVersion": "1.0"
     }
-}
