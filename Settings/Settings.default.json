@@ -17,7 +17,7 @@
         "SSO Username": {
             "flavortext": "Also known as OnQ Login",
             "datatype": "string",
-            "defaultvalue": "donkey",
+            "defaultvalue": "SSO Username",
             "displaytype": "textbox",
             "variablename": "settingsSSOusername"
         },
@@ -61,7 +61,7 @@
         "Plink Install Location": {
             "flavortext": "This feature is Currently Unused",
             "datatype": "string",
-            "defaultvalue": "C:/Program Files/PuTTY",
+            "defaultvalue": "C:/Program Files/P",
             "displaytype": "textbox",
             "variablename": "settingsPlinkDirectory"
         },
