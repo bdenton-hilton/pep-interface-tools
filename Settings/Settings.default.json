@@ -8,7 +8,7 @@
             "variablename": "settingsInterfaceusername"
         },
         "Interface Tool Password": {
-            "flavortext": "This password is used for encryption and should be kept safe",
+            "flavortext": "Test This password is used for encryption and should be kept safe",
             "datatype": "string",
             "defaultvalue": "password",
             "displaytype": "passwordtextbox",
@@ -31,7 +31,7 @@
         "NA-ADM Username": {
             "flavortext": "Username to connect to Windows devices",
             "datatype": "string",
-            "defaultvalue": "NA/ADM-username",
+            "defaultvalue": "NA//ADM-username",
             "displaytype": "textbox",
             "variablename": "settingsNAADMusername"
         },
