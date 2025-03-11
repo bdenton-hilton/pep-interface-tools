@@ -77,7 +77,7 @@
             "datatype": "int",
             "defaultvalue": 17,
             "displaytype": "integertextbox",
-            "variablename": "settingsSSOtimeout"
+            "variablename": "settingsSSOdelete"
         }
     },
     "Directories": {
