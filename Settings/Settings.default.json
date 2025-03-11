@@ -3,7 +3,7 @@
         "Interface Tool Username": {
             "flavortext": "Settings are tied to this username and can be any value",
             "datatype": "string",
-            "defaultvalue": "default",
+            "defaultvalue": "default2",
             "displaytype": "textbox",
             "variablename": "settingsInterfaceusername"
         },
