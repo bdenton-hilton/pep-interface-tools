@@ -76,7 +76,7 @@ Write-Host "`nConnecting to $computer"
 
 $commandOutput = $null
 try {$commandOutput = Invoke-Command -ComputerName $computer -Credential $credential -ScriptBlock $targetScriptBlock}catch{Write-Host "Unable to query $computer. Please check your credentials, VPN connection, trusted hosts and server status. `nDefault HSKP Codes will be set instead."}
-$filteredMaidCodes = $($commandOutput | Where-Object { $_.input_code -notmatch '[a-zA-Z]' } | Where-Object { $_.code_desc -notlike '*(*Supervisor*)*' } | Where-Object { $_.code_desc -notlike '*Attendant*' } | Select-Object input_code, code_desc)
+$filteredMaidCodes = $($commandOutput | Where-Object { $_.input_code -notmatch '[a-zA-Z]' } | Where-Object { $_.code_desc -notlike '*Attendant*' } | Select-Object input_code, code_desc)
 
 if($filteredMaidCodes){
 $maidCodeStrings = @()
@@ -84,6 +84,7 @@ $input_code = $null
 
 foreach ($entry in $filteredMaidCodes) {
     $input_code = $entry.input_code
+    $statuses = $statuses - replace '(^\S+\s+\S+)\s.*', '$1' #regex to remove anything after the second word in the status string.
     $statuses = $entry.code_desc.ToUpper() -split ' '
     $occupied_status = $statuses[0]
     $clean_status = $statuses[1]
