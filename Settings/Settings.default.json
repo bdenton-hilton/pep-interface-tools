@@ -17,7 +17,7 @@
         "SSO Username": {
             "flavortext": "Also known as OnQ Login",
             "datatype": "string",
-            "defaultvalue": "username",
+            "defaultvalue": "donkey",
             "displaytype": "textbox",
             "variablename": "settingsSSOusername"
         },
@@ -68,14 +68,14 @@
         "SSO Time Out": {
             "flavortext": "How many minutes old can your SSO file be to run a report? 0 means PEP Fairy not prompt regardless of age.",
             "datatype": "int",
-            "defaultvalue": 17,
+            "defaultvalue": 12,
             "displaytype": "integertextbox",
             "variablename": "settingsSSOtimeout"
         },
         "SSO Delete Age": {
             "flavortext": "PEP Fairy will automatically delete SSO files this many days or older. 0 Means PEP Fairy will not automatically delete SSO Files",
             "datatype": "int",
-            "defaultvalue": 3,
+            "defaultvalue": 12,
             "displaytype": "integertextbox",
             "variablename": "settingsSSOdelete"
         }
