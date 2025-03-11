@@ -31,7 +31,7 @@
         "NA-ADM Username": {
             "flavortext": "Username to connect to Windows devices",
             "datatype": "string",
-            "defaultvalue": "NA//ADM-username",
+            "defaultvalue": "NA/ADM-username",
             "displaytype": "textbox",
             "variablename": "settingsNAADMusername"
         },
