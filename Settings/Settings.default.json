@@ -64,6 +64,20 @@
             "defaultvalue": "C:/Program Files/PuTTY",
             "displaytype": "textbox",
             "variablename": "settingsPlinkDirectory"
+        },
+        "SSO Time Out": {
+            "flavortext": "How many minutes old can your SSO file be before you are prompted to get a new one?",
+            "datatype": "int",
+            "defaultvalue": 17,
+            "displaytype": "integertextbox",
+            "variablename": "settingsSSOtimeout"
+        },
+        "SSO Delete Age": {
+            "flavortext": "PEP Fairy will automatically delete SSO files this many days or older",
+            "datatype": "int",
+            "defaultvalue": 17,
+            "displaytype": "integertextbox",
+            "variablename": "settingsSSOtimeout"
         }
     },
     "Directories": {
