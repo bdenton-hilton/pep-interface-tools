@@ -86,6 +86,10 @@ Write-Host "`nConnecting to $computer"
 
 $commandOutput = $null
 $commandOutput = Invoke-Command -ComputerName $computer -Credential $credential -ScriptBlock $targetScriptBlock
+
+
+#############################################################################
+
 $filteredMaidCodes = $($commandOutput | Where-Object { $_.input_code -notmatch '[a-zA-Z]' } | Where-Object { $_.code_desc -notlike '*Attendant*' } | Select-Object input_code, code_desc)
 
 if($filteredMaidCodes){
@@ -113,6 +117,9 @@ $maidCodes = $maidCodeStrings -join ","
 } else {$maidCodes = "{`"status_code`":`"1`",`"occupied_status`":`"OCCUPIED`",`"clean_status`":`"CLEAN`"},{`"status_code`":`"2`",`"occupied_status`":`"OCCUPIED`",`"clean_status`":`"DIRTY`"},{`"status_code`":`"3`",`"occupied_status`":`"VACANT`",`"clean_status`":`"CLEAN`"},{`"status_code`":`"4`",`"occupied_status`":`"VACANT`",`"clean_status`":`"DIRTY`"},{`"status_code`":`"5`",`"occupied_status`":`"OCCUPIED`",`"clean_status`":`"READY`"},{`"status_code`":`"7`",`"occupied_status`":`"VACANT`",`"clean_status`":`"READY`"}" 
 $reportResult += "Unable to connect to or find HSKP from $computer.`nDefault HSKP Codes were set.`n"
 }
+
+
+############################################################################
 
 $propertyID = $currentProperty.id
 
