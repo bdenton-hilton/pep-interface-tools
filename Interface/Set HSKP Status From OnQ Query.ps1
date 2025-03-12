@@ -20,7 +20,7 @@ function encyptedPlaintextPasswordToCredentials {
 $sso_login = ConvertFrom-Json -InputObject (Get-Content -Path $ssofile -Raw)
 
 if ($env:globalSettings.Credentials.'NA-ADM Password'.defaultvalue -ne "password")
-{ $credential = encyptedPlaintextPasswordToCredentials -username $globalSettings.Credentials.'NA-ADM Username'.defaultvalue -password $globalSettings.'NA-ADM Password'.defaultvalue }
+{ $credential = encyptedPlaintextPasswordToCredentials -username $($globalSettings.Credentials.'NA-ADM Username'.defaultvalue) -encryptedpassword $($globalSettings.Credentials.'NA-ADM Password'.defaultvalue) }
 else { $credential = Get-Credential }
 
 write-host "$inncodes"
