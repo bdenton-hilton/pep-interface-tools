@@ -129,16 +129,33 @@ ON
     $pbxConfigResponse = Invoke-WebRequest -UseBasicParsing -Uri "$($currentProperty.region.url)hk-property-interfaces/hotelbrand/properties/$($currentProperty.id)/system-config/pbx" -WebSession $session -Headers $headers
     $pbxConfig = $pbxConfigResponse.Content | ConvertFrom-Json
 
-    $variable = $pbxConfig.stream_id.ToString()
+    if ($($pbxConfig.stream_id).ToString().Length -ne 36) {
+        Write-Host "No reservation stream has been assigned to PBX, and therefore this request will fail.`n Please set a stream ID for PBX in HK admin."
+        $reportResult += "No reservation stream has been assigned to PBX, and therefore this request will fail.`n Please set a stream ID for PBX in HK admin."
+        $progress = $false
+    }
+    else {
+        $progress = $true
+    }
 
-    if ($variable.Length -eq 36) {
+    if ($null -eq $($pbxConfig.room_alias_type)) {
+        Write-Host "No room alias type has been assigned to PBX, and therefore this request will fail.`n Please set a room alias for PBX in HK admin."
+        $reportResult += "No room alias type has been assigned to PBX, and therefore this request will fail.`n Please set a room alias for PBX in HK admin."
+        $progress = $false
+    }
+    else {
+        $progress = $true
+    }
+
+
+    if ( $progress) {
         $createHSKPBody = "{`"stream_id`":`"$($pbxConfig.stream_id)`",`"property_id`":`"$propertyID`",`"enabled`":$($pbxConfig.enabled),`"room_alias_type`":`"$($pbxConfig.room_alias_type)`",`"aws_thing_name`":`"pep-prod-$($inncode)-1`",`"room_alias_mappings`":[],`"housekeeping_status_mappings`":[$maidCodes]}"
         $response = Invoke-WebRequest -UseBasicParsing -Uri "$($currentProperty.region.url)hk-property-interfaces/hotelbrand/properties/$($currentProperty.id)/system-config/pbx" -Method "PUT" -WebSession $session -Headers $headers -ContentType "application/json;charset=UTF-8" -Body $createHSKPBody
         $reportResult += "Upload to HK result:" + $response.StatusDescription
         Write-Host "Upload to HK result:" + $response.StatusDescription
-    } else {
-        Write-Host "No reservation stream has been assigned to PBX, and therefore this request will fail.`n Please set a stream ID for PBX in HK admin."
-        $reportResult += "No reservation stream has been assigned to PBX, and therefore this request will fail.`n Please set a stream ID for PBX in HK admin."
+    }
+    else {
+ 
     }
     
 }
@@ -154,4 +171,3 @@ Write-Output "Script execution completed. Summary saved to $savedirectory"
 
 Read-Host "Press Enter to close the window"
 exit
-
