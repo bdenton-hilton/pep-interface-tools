@@ -135,7 +135,9 @@ ON
         $createHSKPBody = "{`"stream_id`":`"$($pbxConfig.stream_id)`",`"property_id`":`"$propertyID`",`"enabled`":$($pbxConfig.enabled),`"room_alias_type`":`"$($pbxConfig.room_alias_type)`",`"aws_thing_name`":`"pep-prod-$($inncode)-1`",`"room_alias_mappings`":[],`"housekeeping_status_mappings`":[$maidCodes]}"
         $response = Invoke-WebRequest -UseBasicParsing -Uri "$($currentProperty.region.url)hk-property-interfaces/hotelbrand/properties/$($currentProperty.id)/system-config/pbx" -Method "PUT" -WebSession $session -Headers $headers -ContentType "application/json;charset=UTF-8" -Body $createHSKPBody
         $reportResult += "Upload to HK result:" + $response.StatusDescription
+        Write-Host "Upload to HK result:" + $response.StatusDescription
     } else {
+        Write-Host "No reservation stream has been assigned to PBX, and therefore this request will fail.`n Please set a stream ID for PBX in HK admin."
         $reportResult += "No reservation stream has been assigned to PBX, and therefore this request will fail.`n Please set a stream ID for PBX in HK admin."
     }
     
