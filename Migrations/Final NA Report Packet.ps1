@@ -2207,15 +2207,15 @@ foreach ($inncode in $inncodes) {
     Ensure-PathExists -path $OutputFolderPath
 
     foreach ($key in $keys) {
+
       $response = $null
       $functionName = "$key.RPT"
       $query = $($reports.$key)
       $targetScriptBlock = { invoke-sqlcmd -database "hpms3" -query $using:query } 
       $response = Invoke-Command -ComputerName $computer -Credential $credential -ScriptBlock $targetScriptBlock
 
-      $csvdata = $respone | ConvertFrom-Csv
-      $csvdata = $csvdata | Where-Object { $_.entry_id -ne "" }
-      $csvData = $csvData | ForEach-Object {
+      $filteredResponse = $response| Where-Object { $_.entry_id -ne "" }
+      $trimmedResponse = $filteredResponse | ForEach-Object {
         $_.PSObject.Properties | ForEach-Object {
           if ($_.Value -is [string]) {
             $_.Value = $_.Value.Trim()
@@ -2224,7 +2224,7 @@ foreach ($inncode in $inncodes) {
         $_
       }
 
-      Invoke-Expression -Command $functionName -csvData $csvData -templatePath $templateFilePath -outputDir $OutputFolderPath
+      Invoke-Expression -Command $functionName -csvData $trimmedResponse -templatePath $templateFilePath -outputDir $OutputFolderPath
 
     }
   
