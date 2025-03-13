@@ -2209,8 +2209,8 @@ foreach ($inncode in $inncodes) {
     foreach ($key in $keys) {
       $response = $null
       $functionName = "$key.RPT"
-            
-      $targetScriptBlock = { invoke-sqlcmd -database "hpms3" -query $($reports.$key) } 
+      $query = $($reports.$key)
+      $targetScriptBlock = { invoke-sqlcmd -database "hpms3" -query $using:query } 
       $response = Invoke-Command -ComputerName $computer -Credential $credential -ScriptBlock $targetScriptBlock
 
       $csvdata = $respone | ConvertFrom-Csv
