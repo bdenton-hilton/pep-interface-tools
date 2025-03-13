@@ -959,6 +959,18 @@ function Split-TimeFromDateTime {
   return $parts[1] + " " + $parts[2]
 }
 
+function SafeGetDateString {
+  param (
+    [string]$date
+  )
+  try {
+    return (Get-Date $date).ToString("M/d/yyyy")
+  }
+  catch {
+    return ""
+  }
+}
+
 ######################################################
 
 function ADVDPARR.RPT {
@@ -2214,7 +2226,7 @@ foreach ($inncode in $inncodes) {
       $targetScriptBlock = { invoke-sqlcmd -database "hpms3" -query $using:query } 
       $response = Invoke-Command -ComputerName $computer -Credential $credential -ScriptBlock $targetScriptBlock
 
-      $filteredResponse = $response| Where-Object { $_.entry_id -ne "" }
+      $filteredResponse = $response | Where-Object { $_.entry_id -ne "" }
       $trimmedResponse = $filteredResponse | ForEach-Object {
         $_.PSObject.Properties | ForEach-Object {
           if ($_.Value -is [string]) {
@@ -2224,8 +2236,8 @@ foreach ($inncode in $inncodes) {
         $_
       }
 
-      Invoke-Expression -Command $functionName -csvData $trimmedResponse -templatePath $templateFilePath -outputDir $OutputFolderPath
-
+      & $functionName -csvData $trimmedResponse -templatePath $templateFilePath -outputDir $OutputFolderPath
+      
     }
   
   }
