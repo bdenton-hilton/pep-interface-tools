@@ -2202,14 +2202,15 @@ foreach ($inncode in $inncodes) {
     $reports = setSqlVariablesFromInncode -inncode $inncode -goLiveDate $goLiveDate
     $keys = $reports.PSObject.Properties.Name
 
+
     $OutputFolderPath = Join-Path -Path $saveDirectory -ChildPath $inncode
-    Ensure-PathExists -path $newFolderPath
+    Ensure-PathExists -path $OutputFolderPath
 
     foreach ($key in $keys) {
       $response = $null
       $functionName = "$key.RPT"
             
-      $targetScriptBlock = { invoke-sqlcmd -database "hpms3" -query $($reports.key) } 
+      $targetScriptBlock = { invoke-sqlcmd -database "hpms3" -query $($reports.$key) } 
       $response = Invoke-Command -ComputerName $computer -Credential $credential -ScriptBlock $targetScriptBlock
 
       $csvdata = $respone | ConvertFrom-Csv
